@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {connect} from 'react-redux';
 import {getPlayers} from 'modules/Feed/actions';
 import {selectPlayers} from 'modules/Feed/selectors';
+
+import {Header} from 'components';
+import PlayersList from './components/PlayersList';
 
 class HomeScreen extends React.Component {
   componentDidMount() {
@@ -12,18 +15,20 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-    // const {players} = this.props;
+    const {players} = this.props;
     // console.log('players ', players);
+    console.log('players ', players);
     return (
-      <View>
-        <Text>Home screen</Text>
+      <View flex={1}>
+        <Header title="WTA Ranking" />
+        <PlayersList players={players} />
       </View>
     );
   }
 }
 
 HomeScreen.propTypes = {
-  // players: PropTypes.arrayOf(PropTypes.object).isRequired,
+  players: PropTypes.arrayOf(PropTypes.object).isRequired,
   onGetPlayers: PropTypes.func.isRequired,
 };
 
