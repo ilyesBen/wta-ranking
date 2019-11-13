@@ -16,10 +16,14 @@ const getPlayersError = error => ({
 });
 
 export const getPlayers = () => async dispatch => {
+  const errorMessage = 'Network request error';
   dispatch(getPlayersLoad());
   try {
     const players = await api.getPlayers();
-    dispatch(getPlayersSuccess(players));
+    if (players.statusCode !== 200) {
+      dispatch(getPlayersError(errorMessage));
+    }
+    dispatch(getPlayersSuccess(players.body));
   } catch (error) {
     dispatch(getPlayersError(error));
   }

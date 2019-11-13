@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {getPlayers} from 'modules/Feed/actions';
 import {selectPlayers} from 'modules/Feed/selectors';
 
-import {Header} from 'components';
+import {Header, Search} from 'components';
 import PlayersList from './components/PlayersList';
 
 class HomeScreen extends React.Component {
@@ -16,11 +16,10 @@ class HomeScreen extends React.Component {
 
   render() {
     const {players} = this.props;
-    // console.log('players ', players);
-    console.log('players ', players);
     return (
       <View flex={1}>
         <Header title="WTA Ranking" />
+        <Search />
         <PlayersList players={players} />
       </View>
     );

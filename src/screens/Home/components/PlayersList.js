@@ -1,23 +1,46 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Card, CardItem, Text} from 'native-base';
+import {Card, CardItem, Text, H1, H2, Left, Row, Col, Icon, H3} from 'native-base';
 import Flag from 'react-native-flags';
-import {FlatList} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
+
+const styles = StyleSheet.create({
+  ranking: {
+    alignItems: 'flex-start',
+  },
+});
 
 class PlayersList extends React.Component {
   renderItem = ({item}) => {
-    const {firstName, lastName, hand, countryCode} = item;
+    const {firstName, lastName, hand, countryCode, ranking, rankingPoints} = item;
     return (
       <Card>
-        <CardItem>
-          <Text>{`${firstName} ${lastName}`}</Text>
-        </CardItem>
-        <CardItem>
-          <Text>Hand: {hand}</Text>
-        </CardItem>
-        <CardItem>
-          <Flag code={countryCode.slice(0, -1)} size={32} />
-        </CardItem>
+        <Row>
+          <CardItem style={styles.ranking}>
+            <H1>{ranking}</H1>
+          </CardItem>
+
+          <Col>
+            <CardItem>
+              <Left>
+                <H2>{`${firstName} ${lastName}`}</H2>
+              </Left>
+            </CardItem>
+            <Row>
+              <CardItem>
+                <Icon name="hand" />
+                <Text>{hand}</Text>
+              </CardItem>
+              <CardItem>
+                <Flag code={countryCode.slice(0, -1)} size={32} />
+              </CardItem>
+            </Row>
+          </Col>
+
+          <CardItem>
+            <H3>{rankingPoints}</H3>
+          </CardItem>
+        </Row>
       </Card>
     );
   };
