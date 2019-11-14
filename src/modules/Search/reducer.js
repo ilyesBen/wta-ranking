@@ -4,40 +4,29 @@ const initialState = {
   list: [],
   error: '',
   loading: false,
-  filters: {
-    ranking: [],
-    rankingPoints: [],
-    date: '',
-  },
 };
 
 const playersReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case actionTypes.GET_PLAYERS_LOAD:
+    case actionTypes.SEARCH_PLAYERS_LOAD:
       return {
         ...state,
         loading: true,
       };
-    case actionTypes.GET_PLAYERS_SUCCESS: {
+    case actionTypes.SEARCH_PLAYERS_SUCCESS: {
       const {players} = action.payload;
       return {
         ...state,
-        list: [...state.list, ...players],
+        list: players,
         loading: false,
       };
     }
-    case actionTypes.GET_PLAYERS_ERROR: {
+    case actionTypes.SEARCH_PLAYERS_ERROR: {
       const {error} = action.payload;
       return {
         ...state,
         loading: false,
         error,
-      };
-    }
-    case actionTypes.SET_FILTERS: {
-      return {
-        ...state,
-        filters: action.payload.filters,
       };
     }
     default:

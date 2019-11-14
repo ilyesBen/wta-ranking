@@ -4,6 +4,7 @@ export const post = (url, body) => {
     method: 'POST',
     headers: {
       Accept: 'application/json',
+      Authorization: `Bearer`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),

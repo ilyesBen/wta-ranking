@@ -6,3 +6,8 @@ export const selectPlayers = createSelector(
   feedState,
   state => state.list
 );
+
+export const selectFilters = createSelector(
+  feedState,
+  state => state.filters
+);

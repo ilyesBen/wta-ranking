@@ -13,6 +13,7 @@ module.exports = {
           constants: './src/constants',
           config: './src/config',
           components: './src/components',
+          utils: './src/utils',
           mocks: './src/mocks',
         },
       },
