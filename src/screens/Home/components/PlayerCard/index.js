@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Card, CardItem, Text, H1, H2, Row, Col} from 'native-base';
 
 import Flag from 'react-native-flags';
@@ -18,39 +18,41 @@ const styles = StyleSheet.create({
 });
 
 const PlayerCard = props => {
-  const {ranking, rankingPoints, countryCode, firstName, lastName, tours} = props;
+  const {ranking, rankingPoints, countryCode, firstName, lastName, tours, navigation} = props;
   return (
-    <Card>
-      <Col>
-        <Row>
-          <CardItem style={styles.ranking}>
-            <H1 style={styles.rankingText}>{ranking}</H1>
-          </CardItem>
+    <TouchableOpacity onPress={() => navigation.navigate('Player')}>
+      <Card>
+        <Col>
+          <Row>
+            <CardItem style={styles.ranking}>
+              <H1 style={styles.rankingText}>{ranking}</H1>
+            </CardItem>
 
-          <CardItem>
-            <H2>{`${firstName} ${lastName}`}</H2>
-          </CardItem>
-        </Row>
+            <CardItem>
+              <H2>{`${firstName} ${lastName}`}</H2>
+            </CardItem>
+          </Row>
 
-        <Row>
-          <CardItem>
-            <View style={styles.flagContainer}>
-              <Flag code={countryCode.slice(0, -1)} size={32} />
-            </View>
+          <Row>
+            <CardItem>
+              <View style={styles.flagContainer}>
+                <Flag code={countryCode ? countryCode.slice(0, -1) : ''} size={32} />
+              </View>
 
-            <Text>{countryCode}</Text>
-          </CardItem>
+              <Text>{countryCode}</Text>
+            </CardItem>
 
-          <CardItem>
-            <Text>Points: {rankingPoints}</Text>
-          </CardItem>
+            <CardItem>
+              <Text>Points: {rankingPoints}</Text>
+            </CardItem>
 
-          <CardItem>
-            <Text>Tours: {tours}</Text>
-          </CardItem>
-        </Row>
-      </Col>
-    </Card>
+            <CardItem>
+              <Text>Tours: {tours}</Text>
+            </CardItem>
+          </Row>
+        </Col>
+      </Card>
+    </TouchableOpacity>
   );
 };
 
@@ -60,7 +62,8 @@ PlayerCard.propTypes = {
   countryCode: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,
   lastName: PropTypes.string.isRequired,
-  tours: PropTypes.string.isRequired,
+  tours: PropTypes.number.isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default PlayerCard;

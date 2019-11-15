@@ -1,10 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {View, FlatList, StyleSheet} from 'react-native';
+import {View, FlatList, StyleSheet, RefreshControl} from 'react-native';
 import {Row} from 'native-base';
 import {connect} from 'react-redux';
-import {getPlayers} from 'modules/Feed/actions';
-import {selectPlayers} from 'modules/Feed/selectors';
+import {getPlayers, refreshPlayers, loadMorePlayers} from 'modules/Feed/actions';
+import {
+  selectPlayers,
+  selectLoading,
+  selectRefreshing,
+  selectLoadingMore,
+} from 'modules/Feed/selectors';
+import {Loading} from 'components';
 
 import theme from 'config/theme';
 import {Search, Filter, PlayerCard} from './components';
@@ -34,6 +40,7 @@ class HomeScreen extends React.Component {
   };
 
   renderItem = ({item}) => {
+    const {navigation} = this.props;
     const {ranking, rankingPoints, countryCode, firstName, lastName, tours} = item;
     return (
       <PlayerCard
@@ -43,12 +50,39 @@ class HomeScreen extends React.Component {
         firstName={firstName}
         lastName={lastName}
         tours={tours}
+        navigation={navigation}
       />
     );
   };
 
+  renderFooter = () => {
+    const {loadingMore} = this.props;
+    if (loadingMore) {
+      return (
+        <View height={50}>
+          <Loading />
+        </View>
+      );
+    }
+    return null;
+  };
+
+  refresh = () => {
+    const {onRefreshPlayers} = this.props;
+    onRefreshPlayers();
+  };
+
+  loadMore = () => {
+    const {onLoadMorePlayers} = this.props;
+    onLoadMorePlayers();
+  };
+
   render() {
-    const {players} = this.props;
+    const {players, refreshing, loading} = this.props;
+
+    if (loading) {
+      return <Loading />;
+    }
 
     return (
       <View flex={1}>
@@ -58,6 +92,10 @@ class HomeScreen extends React.Component {
           data={players}
           renderItem={this.renderItem}
           keyExtractor={player => `${player.id}}`}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
+          onEndReachedThreshold={0.2}
+          onEndReached={this.loadMore}
+          ListFooterComponent={this.renderFooter}
         />
       </View>
     );
@@ -67,17 +105,27 @@ class HomeScreen extends React.Component {
 HomeScreen.propTypes = {
   players: PropTypes.arrayOf(PropTypes.object).isRequired,
   onGetPlayers: PropTypes.func.isRequired,
+  onRefreshPlayers: PropTypes.func.isRequired,
   navigation: PropTypes.objectOf(PropTypes.any).isRequired,
+  refreshing: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
+  loadingMore: PropTypes.bool.isRequired,
+  onLoadMorePlayers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
   return {
     players: selectPlayers(state),
+    loading: selectLoading(state),
+    refreshing: selectRefreshing(state),
+    loadingMore: selectLoadingMore(state),
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   onGetPlayers: () => dispatch(getPlayers()),
+  onRefreshPlayers: () => dispatch(refreshPlayers()),
+  onLoadMorePlayers: () => dispatch(loadMorePlayers()),
 });
 
 export default connect(

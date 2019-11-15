@@ -4,6 +4,8 @@ const initialState = {
   list: [],
   error: '',
   loading: false,
+  refreshing: false,
+  loadingMore: false,
   filters: {
     ranking: [],
     rankingPoints: [],
@@ -22,8 +24,9 @@ const playersReducer = (state = initialState, action = {}) => {
       const {players} = action.payload;
       return {
         ...state,
-        list: [...state.list, ...players],
+        list: players,
         loading: false,
+        refreshing: false,
       };
     }
     case actionTypes.GET_PLAYERS_ERROR: {
@@ -31,6 +34,7 @@ const playersReducer = (state = initialState, action = {}) => {
       return {
         ...state,
         loading: false,
+        refreshing: false,
         error,
       };
     }
@@ -40,6 +44,27 @@ const playersReducer = (state = initialState, action = {}) => {
         filters: action.payload.filters,
       };
     }
+    case actionTypes.REFRESH_PLAYERS_LOAD: {
+      return {
+        ...state,
+        refreshing: true,
+      };
+    }
+    case actionTypes.LOAD_MORE_PLAYERS_LOAD: {
+      return {
+        ...state,
+        loadingMore: true,
+      };
+    }
+    case actionTypes.LOAD_MORE_PLAYERS_SUCCESS: {
+      const {players} = action.payload;
+      return {
+        ...state,
+        list: [...state.list, ...players],
+        loadingMore: false,
+      };
+    }
+
     default:
       return state;
   }
