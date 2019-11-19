@@ -1,7 +1,6 @@
 import {createSelector} from 'reselect';
-import {labelMonths} from 'config/dates';
+import {labelMonths, allMonths} from 'config/dates';
 import {getMonth, getMax} from './utils';
-import {allMonths} from '../../config/dates';
 
 const playersState = state => state.Players;
 
@@ -64,4 +63,14 @@ export const selectPlayerInfo = createSelector(
 
     return {birthDate: '', firstName: '', hand: '', lastName: '', ranking: ''};
   }
+);
+
+export const selectLoading = createSelector(
+  playersState,
+  state => state.loading
+);
+
+export const selectError = createSelector(
+  playersState,
+  state => state.error
 );

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet} from 'react-native';
 import {Button} from 'components';
+import theme from 'config/theme';
 
 const styles = StyleSheet.create({
   searchButton: {
@@ -11,7 +12,13 @@ const styles = StyleSheet.create({
 });
 
 const Search = ({onPress}) => (
-  <Button text="search ..." icon="search" onPress={onPress} style={styles.searchButton} />
+  <Button
+    text="search ..."
+    icon="search"
+    onPress={onPress}
+    style={styles.searchButton}
+    textColor={theme.disabled}
+  />
 );
 
 Search.propTypes = {

@@ -17,6 +17,11 @@ export const selectLoading = createSelector(
   state => state.loading
 );
 
+export const selectError = createSelector(
+  feedState,
+  state => state.error
+);
+
 export const selectRefreshing = createSelector(
   feedState,
   state => state.refreshing

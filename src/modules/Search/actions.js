@@ -26,6 +26,6 @@ export const searchPlayers = searchText => async dispatch => {
     }
     dispatch(searchPlayersSuccess(players.body));
   } catch (error) {
-    dispatch(searchPlayersError(error));
+    dispatch(searchPlayersError(errorMessage));
   }
 };

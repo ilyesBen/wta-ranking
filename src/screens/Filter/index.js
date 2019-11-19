@@ -1,128 +1,160 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {View, ScrollView, StyleSheet, Picker} from 'react-native';
-import {ListItem, Text, H3, Icon} from 'native-base';
+import {Text, H3} from 'native-base';
+import {availableDates} from 'config/dates';
+import {
+  rankingRange,
+  rankingPointsRange,
+  initialRankingPoints,
+  initialRanking,
+} from 'config/ranking';
 import {connect} from 'react-redux';
 import {applyFilters} from 'modules/Feed/actions';
 import {selectSearchResult} from 'modules/Search/selectors';
 import {Section, Separator, Header, Button} from 'components';
 import RangeSlider from 'rn-range-slider';
 import theme from 'config/theme';
-import hexToRgba from 'hex-to-rgba';
+import {Footer} from './components';
 
-/** ****** */
-
-// Some kind of Header
-
-// ranking => slider
-// ranking points => slider
-// Date => date picker or calendar
-
-// Button to apply filter
-
-/** **** */
-
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   scrollView: {
     padding: 10,
   },
+  filterButton: {
+    backgroundColor: theme.primary,
+  },
+  sectionText: {
+    marginTop: 20,
+  },
+  slider: {
+    width: 300,
+    height: 50,
+    marginTop: 30,
+    alignSelf: 'center',
+  },
 });
+
+const datesArray = availableDates.reverse();
+const [minRankingPoints, maxRankingPoints] = rankingPointsRange;
+const [minRanking, maxRanking] = rankingRange;
+
+const [minInitialRankingPoints, maxInitialRankingPoints] = initialRankingPoints;
+const [minInitialRanking, maxInitialRanking] = initialRanking;
 
 class FilterScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      ranking: {
-        low: 1,
-        hight: 10,
-      },
       rankingPoints: {
-        low: 0,
-        hight: 500,
+        low: minInitialRankingPoints,
+        high: maxInitialRankingPoints,
+      },
+      ranking: {
+        low: minInitialRanking,
+        high: maxInitialRanking,
+      },
+      date: {
+        selected: datesArray[0],
       },
     };
   }
 
+  onRankingPointsChange = (low, high) => {
+    this.setState({rankingPoints: {low, high}});
+  };
+
+  onRankingChange = (low, high) => {
+    this.setState({ranking: {low, high}});
+  };
+
+  onChangeDate = itemValue => {
+    this.setState({date: {selected: itemValue}});
+  };
+
+  getFilterObject = () => {
+    const {ranking, rankingPoints, date} = this.state;
+    return {
+      ranking: [ranking.low, ranking.high],
+      rankingPoints: [rankingPoints.low, rankingPoints.high],
+      date: date.selected,
+    };
+  };
+
   render() {
     const {navigation, onApplyFilters} = this.props;
+    const {date, rankingPoints, ranking} = this.state;
 
-    const testFilter = {
-      ranking: [10, 20],
-      rankingPoints: [],
-      date: '',
-    };
+    const filters = this.getFilterObject();
+
     return (
-      <View style={style.container}>
-        <Header title="Filters" />
-        <ScrollView style={style.scrollView}>
+      <View style={styles.container}>
+        <Header title="Filters" onIconPress={() => navigation.goBack()} />
+        <ScrollView style={styles.scrollView}>
           <Section>
-            <H3>Ranking </H3>
-            <View>
+            <H3>Ranking Points</H3>
+            <Text style={styles.sectionText}>{`${rankingPoints.low} - ${rankingPoints.high}`}</Text>
+            <View style={styles.sliderContainer}>
               <RangeSlider
-                style={{width: 300, height: 80, alignSelf: 'center'}}
-                // gravity="center"
-                min={200}
-                max={1000}
+                style={styles.slider}
+                min={minRankingPoints}
+                max={maxRankingPoints}
+                initialLowValue={minInitialRankingPoints}
+                initialHighValue={maxInitialRankingPoints}
                 step={20}
                 selectionColor={theme.primary}
                 labelBackgroundColor={theme.primary}
                 blankColor={theme.disabled}
-                onValueChanged={(low, high, fromUser) => {
-                  this.setState({rangeLow: low, rangeHigh: high});
-                  console.log(low, high, fromUser);
-                }}
+                labelStyle="none"
+                onValueChanged={this.onRankingPointsChange}
               />
             </View>
           </Section>
           <Separator marginVertical={20} />
           <Section>
-            <H3>Ranking Points </H3>
+            <H3>Ranking</H3>
+            <Text style={styles.sectionText}>{`${ranking.low} - ${ranking.high}`}</Text>
             <RangeSlider
-              style={{width: 300, height: 80, alignSelf: 'center'}}
-              labelTailHeight={10}
-              min={200}
-              max={6000}
+              style={styles.slider}
+              min={minRanking}
+              max={maxRanking}
+              initialLowValue={minInitialRanking}
+              initialHighValue={maxInitialRanking}
               step={20}
+              labelStyle="none"
               selectionColor={theme.primary}
               labelBackgroundColor={theme.primary}
               blankColor={theme.disabled}
-              onValueChanged={(low, high, fromUser) => {
-                this.setState({rangeLow: low, rangeHigh: high});
-              }}
+              onValueChanged={this.onRankingChange}
             />
           </Section>
           <Separator marginVertical={20} />
           <Section>
-            <H3>Calendar </H3>
-            <View alignItems="center">
+            <H3>Ranking Date</H3>
+            <View alignItems="center" justifyContent="center">
               <Picker
-                mode="dropdown"
-                iosHeader="Select your SIM"
-                iosIcon={<Icon name="arrow-down" />}
                 style={{width: 200}}
-                // selectedValue={this.state.selected}
-                // onValueChange={this.onValueChange.bind(this)}
-              >
-                <Picker.Item label="Wallet" value="key0" />
-                <Picker.Item label="ATM Card" value="key1" />
-                <Picker.Item label="Debit Card" value="key2" />
-                <Picker.Item label="Credit Card" value="key3" />
-                <Picker.Item label="Net Banking" value="key4" />
+                selectedValue={date.selected}
+                onValueChange={this.onChangeDate}>
+                {datesArray.map(dateValue => (
+                  <Picker.Item label={dateValue} value={dateValue} key={dateValue} />
+                ))}
               </Picker>
             </View>
           </Section>
         </ScrollView>
-        <View
-          height={80}
-          backgroundColor={hexToRgba(theme.surface, 0.3)}
-          borderTopWidth={0.5}
-          alignItems="center"
-          justifyContent="center">
-          <Button text="Filter" onPress={() => onApplyFilters(testFilter)} />
-        </View>
+        <Footer>
+          <Button
+            text="Filter"
+            shadow={false}
+            style={styles.filterButton}
+            textColor={theme.onPrimary}
+            onPress={() => onApplyFilters(filters)}
+          />
+        </Footer>
       </View>
     );
   }
@@ -130,6 +162,7 @@ class FilterScreen extends React.Component {
 
 FilterScreen.propTypes = {
   navigation: PropTypes.objectOf(PropTypes.any).isRequired,
+  onApplyFilters: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {

@@ -4,6 +4,7 @@ const palette = {
   violet: '#773dbd',
   black: '#000000',
   lightGray: '#C8C8C8',
+  darkRed: '#A50203',
 };
 
 const theme = {
@@ -18,6 +19,9 @@ const theme = {
   onPrimary: palette.white,
 
   disabled: palette.lightGray,
+
+  error: palette.darkRed,
+  onError: palette.white,
 };
 
 export default theme;

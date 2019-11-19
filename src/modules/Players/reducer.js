@@ -21,8 +21,8 @@ const playersReducer = (state = initialState, action = {}) => {
       return {
         ...state,
         players: {
+          ...state.players,
           [playerId]: initialPlayerState,
-          ...state.players[playerId],
         },
         loading: true,
         error: '',

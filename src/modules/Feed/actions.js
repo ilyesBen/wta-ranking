@@ -54,7 +54,7 @@ export const getPlayers = () => async (dispatch, getState) => {
     }
     return dispatch(getPlayersSuccess(players.body));
   } catch (error) {
-    return dispatch(getPlayersError(error));
+    return dispatch(getPlayersError(errorMessage));
   }
 };
 
@@ -77,20 +77,19 @@ export const refreshPlayers = () => async (dispatch, getState) => {
     }
     return dispatch(getPlayersSuccess(players.body));
   } catch (error) {
-    return dispatch(getPlayersError(error));
+    return dispatch(getPlayersError(errorMessage));
   }
 };
 
 export const loadMorePlayers = () => async (dispatch, getState) => {
   const errorMessage = 'Network request error';
   const loadingMore = selectLoadingMore(getState());
+  const playersList = selectPlayers(getState());
 
-  if (!loadingMore) {
+  if (!loadingMore && playersList.length >= limit) {
     dispatch(loadMorePlayersLoad());
 
     const filters = selectFilters(getState());
-
-    const playersList = selectPlayers(getState());
     const offset = playersList.length;
 
     const body = {
@@ -106,7 +105,7 @@ export const loadMorePlayers = () => async (dispatch, getState) => {
       }
       return dispatch(loadMorePlayersSuccess(players.body));
     } catch (error) {
-      return dispatch(getPlayersError(error));
+      return dispatch(getPlayersError(errorMessage));
     }
   }
   return 0;

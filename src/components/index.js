@@ -7,3 +7,4 @@ export {default as Col} from './Col';
 export {default as Row} from './Row';
 export {default as Charts} from './Charts';
 export {default as Carousel} from './Carousel';
+export {default as Error} from './Error';

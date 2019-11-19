@@ -25,6 +25,14 @@ const handleCustomTransition = ({scenes}) => {
 
   if (
     prevScene &&
+    prevScene.route.routeName === 'Search' &&
+    nextScene.route.routeName === 'Player'
+  ) {
+    return fromRight();
+  }
+
+  if (
+    prevScene &&
     prevScene.route.routeName === 'Player' &&
     nextScene.route.routeName === 'Charts'
   ) {

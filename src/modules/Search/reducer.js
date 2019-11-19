@@ -12,6 +12,7 @@ const playersReducer = (state = initialState, action = {}) => {
       return {
         ...state,
         loading: true,
+        error: '',
       };
     case actionTypes.SEARCH_PLAYERS_SUCCESS: {
       const {players} = action.payload;
@@ -19,6 +20,7 @@ const playersReducer = (state = initialState, action = {}) => {
         ...state,
         list: players,
         loading: false,
+        error: '',
       };
     }
     case actionTypes.SEARCH_PLAYERS_ERROR: {

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Card, CardItem, Text, H1, H2, Row, Col} from 'native-base';
-
+import getCountryISO2 from 'country-iso-3-to-2';
 import Flag from 'react-native-flags';
 import theme from 'config/theme';
 
@@ -45,7 +45,7 @@ const PlayerCard = props => {
           <Row>
             <CardItem>
               <View style={styles.flagContainer}>
-                <Flag code={countryCode ? countryCode.slice(0, -1) : ''} size={32} />
+                <Flag code={getCountryISO2(countryCode)} size={32} />
               </View>
 
               <Text>{countryCode}</Text>

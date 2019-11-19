@@ -19,6 +19,7 @@ const playersReducer = (state = initialState, action = {}) => {
       return {
         ...state,
         loading: true,
+        error: '',
       };
     case actionTypes.GET_PLAYERS_SUCCESS: {
       const {players} = action.payload;
@@ -27,6 +28,7 @@ const playersReducer = (state = initialState, action = {}) => {
         list: players,
         loading: false,
         refreshing: false,
+        error: '',
       };
     }
     case actionTypes.GET_PLAYERS_ERROR: {
@@ -48,6 +50,7 @@ const playersReducer = (state = initialState, action = {}) => {
       return {
         ...state,
         refreshing: true,
+        error: '',
       };
     }
     case actionTypes.LOAD_MORE_PLAYERS_LOAD: {

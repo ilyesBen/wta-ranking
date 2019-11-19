@@ -1,6 +1,8 @@
 import * as api from 'api';
 import actionTypes from './actionTypes';
 
+const isObjectEmpty = object => Object.keys(object).length === 0;
+
 const playerDetailsLoad = playerId => ({
   payload: {playerId},
   type: actionTypes.GET_PLAYER_LOAD,
@@ -16,17 +18,23 @@ const playerDetailsError = error => ({
   type: actionTypes.GET_PLAYER_ERROR,
 });
 
-export const getPlayerDetails = playerId => dispatch => {
+export const getPlayerDetails = playerId => async dispatch => {
   const errorMessage = 'Network request failed';
+  const playerStatError = 'Stats not found for this player';
+
   dispatch(playerDetailsLoad(playerId));
 
   try {
-    const playerDetails = api.getPlayerDetails(playerId);
+    const playerDetails = await api.getPlayerDetails({playerId});
+
     if (playerDetails.statusCode !== 200) {
-      dispatch(playerDetailsError(errorMessage));
+      return dispatch(playerDetailsError(errorMessage));
     }
-    dispatch(playerDetailsSuccess(playerId, playerDetails.body));
+    if (isObjectEmpty(playerDetails.body)) {
+      return dispatch(playerDetailsError(playerStatError));
+    }
+    return dispatch(playerDetailsSuccess(playerId, playerDetails.body));
   } catch (error) {
-    dispatch(playerDetailsError(errorMessage));
+    return dispatch(playerDetailsError(playerStatError));
   }
 };

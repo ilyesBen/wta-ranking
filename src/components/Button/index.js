@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
     width: 100,
     marginTop: 10,
     backgroundColor: theme.surface,
-    borderColor: theme.onSurface,
+  },
+  shadow: {
     shadowColor: theme.onSurface,
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.4,
@@ -18,10 +19,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const customButton = ({onPress, text, icon, textColor, iconColor, style}) => {
+const customButton = ({onPress, text, icon, textColor, iconColor, style, shadow}) => {
   const Container = icon ? Left : Body;
   return (
-    <Button style={[styles.container, {...style}]} onPress={onPress}>
+    <Button
+      style={[styles.container, {...style, ...(shadow ? styles.shadow : {})}]}
+      onPress={onPress}>
       {icon ? <Icon name={icon} style={{color: iconColor}} /> : null}
       <Container>
         <Text style={{color: textColor}}>{text}</Text>
@@ -37,6 +40,7 @@ customButton.propTypes = {
   style: PropTypes.objectOf(PropTypes.any),
   textColor: PropTypes.string,
   iconColor: PropTypes.string,
+  shadow: PropTypes.bool,
 };
 
 customButton.defaultProps = {
@@ -44,6 +48,7 @@ customButton.defaultProps = {
   style: {},
   textColor: theme.onSurface,
   iconColor: theme.onSurface,
+  shadow: true,
 };
 
 export default customButton;

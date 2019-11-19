@@ -10,7 +10,6 @@ module.exports = {
           store: './src/store',
           modules: './src/modules',
           api: './src/api',
-          constants: './src/constants',
           config: './src/config',
           components: './src/components',
           utils: './src/utils',

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import theme from 'config/theme';
-
 import {BarChart} from 'react-native-chart-kit';
 import hexToRgba from 'hex-to-rgba';
 
@@ -19,6 +18,8 @@ const displayMonths = months =>
     }
   });
 
+const displayData = data => data.map(value => (value !== 0 ? 1 / value : 0));
+
 const Bar = props => {
   const {labels, data, height, width, shadow} = props;
   const shadowStyle = {
@@ -33,7 +34,7 @@ const Bar = props => {
         labels: displayMonths(labels),
         datasets: [
           {
-            data: data.length ? data : [0],
+            data: data.length ? displayData(data) : [0],
           },
         ],
       }}
@@ -45,6 +46,7 @@ const Bar = props => {
       }}
       width={width}
       height={height}
+      withHorizontalLabels={false}
       chartConfig={{
         backgroundColor: theme.surface,
         backgroundGradientFrom: theme.surface,

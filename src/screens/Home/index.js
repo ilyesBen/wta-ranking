@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {View, FlatList, StyleSheet, RefreshControl} from 'react-native';
-import {Row} from 'native-base';
+import {Row, Text} from 'native-base';
 import {connect} from 'react-redux';
 import {getPlayers, refreshPlayers, loadMorePlayers} from 'modules/Feed/actions';
 import {
@@ -9,8 +9,9 @@ import {
   selectLoading,
   selectRefreshing,
   selectLoadingMore,
+  selectError,
 } from 'modules/Feed/selectors';
-import {Loading} from 'components';
+import {Loading, Error} from 'components';
 
 import theme from 'config/theme';
 import {Search, Filter, PlayerCard} from './components';
@@ -56,6 +57,18 @@ class HomeScreen extends React.Component {
     );
   };
 
+  renderEmpty = () => {
+    const {error, onGetPlayers} = this.props;
+    if (error) {
+      return <Error errorMessage={error} onTryAgainPress={onGetPlayers} />;
+    }
+    return (
+      <View alignItems="center" justifyContent="center">
+        <Text>No Results found</Text>
+      </View>
+    );
+  };
+
   renderFooter = () => {
     const {loadingMore} = this.props;
     if (loadingMore) {
@@ -96,6 +109,7 @@ class HomeScreen extends React.Component {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.refresh} />}
           onEndReachedThreshold={0.2}
           onEndReached={this.loadMore}
+          ListEmptyComponent={this.renderEmpty}
           ListFooterComponent={this.renderFooter}
         />
       </View>
@@ -112,12 +126,14 @@ HomeScreen.propTypes = {
   loading: PropTypes.bool.isRequired,
   loadingMore: PropTypes.bool.isRequired,
   onLoadMorePlayers: PropTypes.func.isRequired,
+  error: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => {
   return {
     players: selectPlayers(state),
     loading: selectLoading(state),
+    error: selectError(state),
     refreshing: selectRefreshing(state),
     loadingMore: selectLoadingMore(state),
   };
