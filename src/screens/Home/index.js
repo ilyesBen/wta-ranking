@@ -41,7 +41,7 @@ class HomeScreen extends React.Component {
 
   renderItem = ({item}) => {
     const {navigation} = this.props;
-    const {ranking, rankingPoints, countryCode, firstName, lastName, tours} = item;
+    const {ranking, rankingPoints, countryCode, firstName, lastName, tours, id} = item;
     return (
       <PlayerCard
         ranking={ranking}
@@ -50,6 +50,7 @@ class HomeScreen extends React.Component {
         firstName={firstName}
         lastName={lastName}
         tours={tours}
+        playerId={id}
         navigation={navigation}
       />
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {View, FlatList} from 'react-native';
+import {View, FlatList, TouchableOpacity} from 'react-native';
 import {ListItem, Text} from 'native-base';
 import {connect} from 'react-redux';
 import {searchPlayers} from 'modules/Search/actions';
@@ -9,17 +9,23 @@ import {selectSearchResult} from 'modules/Search/selectors';
 import {SearchInput} from './components';
 
 class SearchScreen extends React.Component {
+  timeout = null;
+
   search = searchText => {
     const {onSearchPlayer} = this.props;
-    onSearchPlayer(searchText);
+    clearTimeout(this.timeout);
+    this.timeout = setTimeout(() => onSearchPlayer(searchText), 500);
   };
 
   renderItem = ({item}) => {
-    const {firstName, lastName} = item;
+    const {firstName, lastName, id} = item;
+    const {navigation} = this.props;
     return (
-      <ListItem>
-        <Text>{`${firstName} ${lastName}`}</Text>
-      </ListItem>
+      <TouchableOpacity onPress={() => navigation.navigate('Player', {playerId: id})}>
+        <ListItem>
+          <Text>{`${firstName} ${lastName}`}</Text>
+        </ListItem>
+      </TouchableOpacity>
     );
   };
 
@@ -32,7 +38,7 @@ class SearchScreen extends React.Component {
         <FlatList
           data={searchResult}
           renderItem={this.renderItem}
-          keyExtractor={player => `${player.id}}`}
+          keyExtractor={player => `${player.id}`}
         />
       </View>
     );

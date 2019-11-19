@@ -29,7 +29,7 @@ const refreshPlayersLoad = () => ({type: actionTypes.REFRESH_PLAYERS_LOAD});
 
 const loadMorePlayersLoad = () => ({type: actionTypes.LOAD_MORE_PLAYERS_LOAD});
 
-const loadMorePlayersSucess = players => ({
+const loadMorePlayersSuccess = players => ({
   type: actionTypes.LOAD_MORE_PLAYERS_SUCCESS,
   payload: {players},
 });
@@ -52,9 +52,9 @@ export const getPlayers = () => async (dispatch, getState) => {
     if (players.statusCode !== 200) {
       return dispatch(getPlayersError(errorMessage));
     }
-    dispatch(getPlayersSuccess(players.body));
+    return dispatch(getPlayersSuccess(players.body));
   } catch (error) {
-    dispatch(getPlayersError(error));
+    return dispatch(getPlayersError(error));
   }
 };
 
@@ -75,9 +75,9 @@ export const refreshPlayers = () => async (dispatch, getState) => {
     if (players.statusCode !== 200) {
       return dispatch(getPlayersError(errorMessage));
     }
-    dispatch(getPlayersSuccess(players.body));
+    return dispatch(getPlayersSuccess(players.body));
   } catch (error) {
-    dispatch(getPlayersError(error));
+    return dispatch(getPlayersError(error));
   }
 };
 
@@ -104,11 +104,12 @@ export const loadMorePlayers = () => async (dispatch, getState) => {
       if (players.statusCode !== 200) {
         return dispatch(getPlayersError(errorMessage));
       }
-      dispatch(loadMorePlayersSucess(players.body));
+      return dispatch(loadMorePlayersSuccess(players.body));
     } catch (error) {
-      dispatch(getPlayersError(error));
+      return dispatch(getPlayersError(error));
     }
   }
+  return 0;
 };
 
 export const applyFilters = filters => async dispatch => {

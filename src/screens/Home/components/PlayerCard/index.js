@@ -18,9 +18,18 @@ const styles = StyleSheet.create({
 });
 
 const PlayerCard = props => {
-  const {ranking, rankingPoints, countryCode, firstName, lastName, tours, navigation} = props;
+  const {
+    ranking,
+    rankingPoints,
+    countryCode,
+    firstName,
+    lastName,
+    tours,
+    navigation,
+    playerId,
+  } = props;
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('Player')}>
+    <TouchableOpacity onPress={() => navigation.navigate('Player', {playerId})}>
       <Card>
         <Col>
           <Row>
@@ -58,6 +67,7 @@ const PlayerCard = props => {
 
 PlayerCard.propTypes = {
   ranking: PropTypes.number.isRequired,
+  playerId: PropTypes.number.isRequired,
   rankingPoints: PropTypes.number.isRequired,
   countryCode: PropTypes.string.isRequired,
   firstName: PropTypes.string.isRequired,

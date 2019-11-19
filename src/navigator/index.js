@@ -7,6 +7,7 @@ import HomeScreen from 'screens/Home';
 import SearchScreen from 'screens/Search';
 import FilterScreen from 'screens/Filter';
 import PlayerScreen from 'screens/Player';
+import ChartsScreen from 'screens/Charts';
 
 const handleCustomTransition = ({scenes}) => {
   const prevScene = scenes[scenes.length - 2];
@@ -21,6 +22,14 @@ const handleCustomTransition = ({scenes}) => {
   if (prevScene && prevScene.route.routeName === 'Home' && nextScene.route.routeName === 'Player') {
     return fromRight();
   }
+
+  if (
+    prevScene &&
+    prevScene.route.routeName === 'Player' &&
+    nextScene.route.routeName === 'Charts'
+  ) {
+    return fromBottom();
+  }
   return fromLeft();
 };
 
@@ -29,6 +38,7 @@ const Screens = createStackNavigator(
     Home: HomeScreen,
     Search: SearchScreen,
     Player: PlayerScreen,
+    Charts: ChartsScreen,
     Filter: {
       screen: FilterScreen,
       navigationOptions: {
