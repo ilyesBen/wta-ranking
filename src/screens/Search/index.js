@@ -11,10 +11,18 @@ import {SearchInput} from './components';
 class SearchScreen extends React.Component {
   timeout = null;
 
+  constructor() {
+    super();
+    this.state = {searchText: ''};
+  }
+
   search = searchText => {
     const {onSearchPlayer} = this.props;
     clearTimeout(this.timeout);
-    this.timeout = setTimeout(() => onSearchPlayer(searchText), 500);
+    this.timeout = setTimeout(() => {
+      onSearchPlayer(searchText);
+      this.setState({searchText});
+    }, 500);
   };
 
   renderItem = ({item}) => {
@@ -29,36 +37,53 @@ class SearchScreen extends React.Component {
 
   renderEmpty = () => {
     const {error} = this.props;
+    const {searchText} = this.state;
+
     if (error) {
       return <Error errorMessage={error} />;
     }
 
+    if (searchText) {
+      return (
+        <View alignItems="center" justifyContent="center" marginTop={10}>
+          <Text>{`No matches found for "${searchText}"`}</Text>
+        </View>
+      );
+    }
+
+    return null;
+  };
+
+  renderList = () => {
+    const {loading, searchResult} = this.props;
+
+    if (loading) {
+      return (
+        <View height={100}>
+          <Loading />
+        </View>
+      );
+    }
+
     return (
-      <View alignItems="center" justifyContent="center" marginTop={10}>
-        <Text>No Results found</Text>
-      </View>
+      <FlatList
+        data={searchResult}
+        renderItem={this.renderItem}
+        keyExtractor={player => `${player.id}`}
+        ListEmptyComponent={this.renderEmpty}
+        keyboardShouldPersistTaps="always"
+      />
     );
   };
 
   render() {
-    const {searchResult, navigation, loading} = this.props;
+    const {navigation} = this.props;
+
     const {goBack} = navigation;
     return (
       <View flex={1}>
         <SearchInput onChangeText={text => this.search(text)} goBack={goBack} />
-        {!loading ? (
-          <FlatList
-            data={searchResult}
-            renderItem={this.renderItem}
-            keyExtractor={player => `${player.id}`}
-            ListEmptyComponent={this.renderEmpty}
-            keyboardShouldPersistTaps="always"
-          />
-        ) : (
-          <View height={100}>
-            <Loading />
-          </View>
-        )}
+        {this.renderList()}
       </View>
     );
   }
