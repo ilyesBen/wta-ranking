@@ -15,6 +15,9 @@ const styles = StyleSheet.create({
   flagContainer: {
     marginRight: 10,
   },
+  label: {
+    fontWeight: '500',
+  },
 });
 
 const PlayerCard = props => {
@@ -42,7 +45,7 @@ const PlayerCard = props => {
             </CardItem>
           </Row>
 
-          <Row>
+          <Row style={styles.infoContainer}>
             <CardItem>
               <View style={styles.flagContainer}>
                 <Flag code={getCountryISO2(countryCode)} size={32} />
@@ -52,11 +55,15 @@ const PlayerCard = props => {
             </CardItem>
 
             <CardItem>
-              <Text>Points: {rankingPoints}</Text>
+              <Text>
+                <Text style={styles.label}>Points</Text> {rankingPoints}
+              </Text>
             </CardItem>
 
             <CardItem>
-              <Text>Tours: {tours}</Text>
+              <Text>
+                <Text style={styles.label}>Tours</Text> {tours}
+              </Text>
             </CardItem>
           </Row>
         </Col>

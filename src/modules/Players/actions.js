@@ -1,5 +1,6 @@
 import * as api from 'api';
 import actionTypes from './actionTypes';
+import {selectPlayer} from './selectors';
 
 const isObjectEmpty = object => Object.keys(object).length === 0;
 
@@ -18,11 +19,16 @@ const playerDetailsError = error => ({
   type: actionTypes.GET_PLAYER_ERROR,
 });
 
-export const getPlayerDetails = playerId => async dispatch => {
+export const getPlayerDetails = playerId => async (dispatch, getState) => {
   const errorMessage = 'Network request failed';
   const playerStatError = 'Stats not found for this player';
 
-  dispatch(playerDetailsLoad(playerId));
+  const player = selectPlayer(getState(), {playerId});
+
+  // caching
+  if (!player) {
+    dispatch(playerDetailsLoad(playerId));
+  }
 
   try {
     const playerDetails = await api.getPlayerDetails({playerId});

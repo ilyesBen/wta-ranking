@@ -8,7 +8,7 @@ import hexToRgba from 'hex-to-rgba';
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: hexToRgba(theme.primary, 0.2),
+    backgroundColor: hexToRgba(theme.primary, 0.4),
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',

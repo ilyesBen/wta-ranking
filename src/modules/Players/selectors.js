@@ -4,6 +4,11 @@ import {getMonth, getMax} from './utils';
 
 const playersState = state => state.Players;
 
+export const selectPlayer = createSelector(
+  [playersState, (state, {playerId}) => ({playerId})],
+  (state, {playerId}) => state.players[playerId]
+);
+
 const getData = (performances, months, field = 'rankingPoints') =>
   months.reduce((averages, month) => {
     const rankingPointsPerMonth = performances.reduce(
@@ -61,7 +66,14 @@ export const selectPlayerInfo = createSelector(
       };
     }
 
-    return {birthDate: '', firstName: '', hand: '', lastName: '', ranking: ''};
+    return {
+      birthDate: '',
+      firstName: '',
+      hand: '',
+      lastName: '',
+      ranking: '',
+      countryCode: '',
+    };
   }
 );
 
